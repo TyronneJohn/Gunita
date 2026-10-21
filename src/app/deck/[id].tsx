@@ -23,9 +23,14 @@ export default function DeckScreen() {
   const { startSession } = useProgress();
   // Nothing is selected until the player picks a depth.
   const [depth, setDepth] = useState<DepthFilter | null>(null);
+  const [mode, setMode] = useState<'solo' | 'group'>('solo');
 
-  const startNew = () => {
+  const next = () => {
     if (!depth) return;
+    if (mode === 'group') {
+      router.push({ pathname: '/group/[id]', params: { id, depth } });
+      return;
+    }
     startSession(id, depth);
     router.push({ pathname: '/play/[id]', params: { id } });
   };
@@ -101,13 +106,56 @@ export default function DeckScreen() {
             })}
           </View>
 
+          {/* Solo or group */}
+          <AppText variant="heading" tone="cocoa" className="mt-8">
+            {t('deck.modeTitle')}
+          </AppText>
+          <View className="mt-4 flex-row gap-3">
+            {(
+              [
+                {
+                  id: 'solo',
+                  icon: 'person-outline',
+                  label: 'deck.solo',
+                  description: 'deck.soloDescription',
+                },
+                {
+                  id: 'group',
+                  icon: 'people-outline',
+                  label: 'deck.group',
+                  description: 'deck.groupDescription',
+                },
+              ] as const
+            ).map((option) => {
+              const selected = option.id === mode;
+              return (
+                <Pressable
+                  key={option.id}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected }}
+                  onPress={() => setMode(option.id)}
+                  className={`flex-1 rounded-2xl border-2 p-4 active:opacity-80 ${selected ? 'border-cocoa bg-paper' : 'border-sand/70 bg-paper'}`}>
+                  <View
+                    className={`h-10 w-10 items-center justify-center rounded-full ${selected ? 'bg-cocoa' : 'bg-beige'}`}>
+                    <Ionicons
+                      name={option.icon}
+                      size={20}
+                      color={selected ? colors.paper : colors.cocoa}
+                    />
+                  </View>
+                  <AppText variant="label" tone="cocoa" className="mt-3">
+                    {t(option.label)}
+                  </AppText>
+                  <AppText variant="caption" tone="muted" className="mt-0.5">
+                    {t(option.description)}
+                  </AppText>
+                </Pressable>
+              );
+            })}
+          </View>
+
           <View className="mt-8">
-            <Button
-              label={t('deck.next')}
-              icon="arrow-forward"
-              disabled={!depth}
-              onPress={startNew}
-            />
+            <Button label={t('deck.next')} icon="arrow-forward" disabled={!depth} onPress={next} />
           </View>
         </>
       )}

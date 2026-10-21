@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState, type ComponentProps, type ReactNode } from 'react';
 import { Pressable, Switch, View } from 'react-native';
 
+import { AccountCard, DeleteAccountButton } from '@/components/account-card';
 import { AppText } from '@/components/app-text';
 import { Button } from '@/components/button';
 import { PageHeader } from '@/components/page-header';
@@ -9,6 +10,7 @@ import { PaperCard } from '@/components/paper-card';
 import { Screen } from '@/components/screen';
 import { colors } from '@/constants/theme';
 import { languageNames, useLanguage, type Language, type TranslationKey } from '@/i18n';
+import { useAuth } from '@/lib/auth';
 import { useOnboarding } from '@/lib/onboarding';
 import { useSounds } from '@/lib/sounds';
 
@@ -26,6 +28,7 @@ export default function ProfileScreen() {
   const { resetOnboarding } = useOnboarding();
   const { enabled: soundEnabled, setEnabled: setSoundEnabled } = useSounds();
   const [languageOpen, setLanguageOpen] = useState(false);
+  const { enabled: authEnabled, user } = useAuth();
 
   return (
     <Screen>
@@ -35,10 +38,19 @@ export default function ProfileScreen() {
         subtitle={t('profile.subtitle')}
       />
 
-      <PaperCard className="mt-6 px-5">
-        <SettingRow icon="person-circle-outline" label={t('profile.account')}>
-          <SoonBadge label={t('profile.soon')} />
-        </SettingRow>
+      {/* Account: back-up invite when signed out, email + sign out when signed in */}
+      {authEnabled && (
+        <View className="mt-6">
+          <AccountCard />
+        </View>
+      )}
+
+      <PaperCard className={`px-5 ${authEnabled ? 'mt-4' : 'mt-6'}`}>
+        {!authEnabled && (
+          <SettingRow icon="person-circle-outline" label={t('profile.account')}>
+            <SoonBadge label={t('profile.soon')} />
+          </SettingRow>
+        )}
 
         {/* Language */}
         <Pressable
@@ -46,7 +58,7 @@ export default function ProfileScreen() {
           accessibilityState={{ expanded: languageOpen }}
           onPress={() => setLanguageOpen((open) => !open)}
           className="active:opacity-70">
-          <SettingRow icon="language-outline" label={t('profile.language')} divider>
+          <SettingRow icon="language-outline" label={t('profile.language')} divider={!authEnabled}>
             <AppText variant="label" tone="muted" className="mr-2">
               {languageNames[language]}
             </AppText>
@@ -106,6 +118,12 @@ export default function ProfileScreen() {
           onPress={resetOnboarding}
         />
       </View>
+
+      {user && (
+        <View className="mt-8">
+          <DeleteAccountButton />
+        </View>
+      )}
     </Screen>
   );
 }

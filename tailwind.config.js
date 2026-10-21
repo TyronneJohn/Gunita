@@ -21,6 +21,8 @@ module.exports = {
         ink: "#2E2621",
         muted: "#8A7A6D",
         berry: "#B8615B",
+        olive: "#B3B38A",
+        peach: "#E6B794",
       },
       // Each weight is its own font family in React Native,
       // so we name them instead of using font-bold, etc.

@@ -27,7 +27,7 @@ export type DepthFilter = 'light' | 'deeper' | 'all';
 
 const allowedDepths: Record<DepthFilter, Depth[]> = {
   light: ['light'],
-  deeper: ['light', 'deeper'],
+  deeper: ['deeper'],
   all: ['light', 'deeper', 'deepest'],
 };
 

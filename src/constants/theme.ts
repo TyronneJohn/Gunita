@@ -20,6 +20,8 @@ export const colors = {
   muted: '#8A7A6D',
   /** Filled heart for favorites. */
   berry: '#B8615B',
+  olive: '#B3B38A',
+  peach: '#E6B794',
 } as const;
 
 export const fonts = {

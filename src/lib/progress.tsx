@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { getCard, getDeckCards, type DepthFilter } from '@/data/cards';
 
@@ -26,6 +26,12 @@ type ProgressContextValue = {
   startSession: (deckId: string, depth: DepthFilter) => void;
   /** Moves a card from the table to the picked pile. */
   pickCard: (deckId: string, cardId: string) => void;
+  /** Every deck session, for syncing. */
+  sessions: Record<string, DeckSession>;
+  /** Applies sessions from the cloud, keeping whichever version is newer. */
+  mergeRemote: (incoming: Record<string, DeckSession>) => void;
+  /** Clears progress on this phone (used when a different account signs in). */
+  resetLocal: () => void;
 };
 
 const EMPTY: ProgressData = { sessions: {}, lastDeckId: null };
@@ -52,6 +58,25 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (data) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data)).catch(() => {});
   }, [data]);
+
+  const mergeRemote = useCallback((incoming: Record<string, DeckSession>) => {
+    setData((prev) => {
+      const current = prev ?? EMPTY;
+      const sessions = { ...current.sessions };
+      let changed = false;
+      for (const [deckId, session] of Object.entries(incoming)) {
+        const existing = sessions[deckId];
+        if (!existing || session.updatedAt > existing.updatedAt) {
+          sessions[deckId] = session;
+          changed = true;
+        }
+      }
+      // Same object when nothing is newer, so sync doesn't loop.
+      return changed ? { ...current, sessions } : current;
+    });
+  }, []);
+
+  const resetLocal = useCallback(() => setData(EMPTY), []);
 
   const value: ProgressContextValue = {
     loaded: data !== null,
@@ -89,6 +114,9 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         };
       });
     },
+    sessions: data?.sessions ?? {},
+    mergeRemote,
+    resetLocal,
   };
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>;

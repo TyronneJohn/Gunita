@@ -15,11 +15,14 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SplashOverlay } from '@/components/splash-overlay';
 import { colors } from '@/constants/theme';
 import { LanguageProvider, useLanguage } from '@/i18n';
+import { AuthProvider, useAuth } from '@/lib/auth';
 import { FavoritesProvider, useFavorites } from '@/lib/favorites';
+import { GroupProvider } from '@/lib/group';
 import { JournalProvider, useJournal } from '@/lib/journal';
 import { OnboardingProvider, useOnboarding } from '@/lib/onboarding';
 import { ProgressProvider, useProgress } from '@/lib/progress';
 import { SoundProvider } from '@/lib/sounds';
+import { SyncProvider } from '@/lib/sync';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,19 +51,25 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <LanguageProvider>
-        <SoundProvider>
-          <OnboardingProvider>
-            <ProgressProvider>
-              <FavoritesProvider>
-                <JournalProvider>
-                  <ThemeProvider value={gunitaTheme}>
-                    <RootNavigator fontsReady={fontsLoaded || !!fontError} />
-                  </ThemeProvider>
-                </JournalProvider>
-              </FavoritesProvider>
-            </ProgressProvider>
-          </OnboardingProvider>
-        </SoundProvider>
+        <AuthProvider>
+          <SoundProvider>
+            <OnboardingProvider>
+              <ProgressProvider>
+                <FavoritesProvider>
+                  <JournalProvider>
+                    <SyncProvider>
+                      <GroupProvider>
+                        <ThemeProvider value={gunitaTheme}>
+                          <RootNavigator fontsReady={fontsLoaded || !!fontError} />
+                        </ThemeProvider>
+                      </GroupProvider>
+                    </SyncProvider>
+                  </JournalProvider>
+                </FavoritesProvider>
+              </ProgressProvider>
+            </OnboardingProvider>
+          </SoundProvider>
+        </AuthProvider>
       </LanguageProvider>
     </GestureHandlerRootView>
   );
@@ -72,6 +81,7 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
   const { loaded: languageLoaded } = useLanguage();
   const { loaded: favoritesLoaded } = useFavorites();
   const { loaded: journalLoaded } = useJournal();
+  const { loaded: authLoaded } = useAuth();
 
   // Keep the native splash screen up until fonts and saved state are ready.
   const ready =
@@ -80,7 +90,8 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
     progressLoaded &&
     languageLoaded &&
     favoritesLoaded &&
-    journalLoaded;
+    journalLoaded &&
+    authLoaded;
   if (!ready) return null;
 
   return (
@@ -98,6 +109,10 @@ function RootNavigator({ fontsReady }: { fontsReady: boolean }) {
           <Stack.Screen name="play/[id]" options={{ animation: 'slide_from_bottom' }} />
           <Stack.Screen name="question/[questionId]" options={{ animation: 'slide_from_right' }} />
           <Stack.Screen name="write/[questionId]" options={{ animation: 'slide_from_bottom' }} />
+          <Stack.Screen name="group/[id]" options={{ animation: 'slide_from_right' }} />
+          <Stack.Screen name="auth/sign-in" options={{ animation: 'slide_from_bottom' }} />
+          <Stack.Screen name="auth/sign-up" options={{ animation: 'fade' }} />
+          <Stack.Screen name="auth/forgot-password" options={{ animation: 'slide_from_right' }} />
         </Stack.Protected>
         <Stack.Protected guard={!hasOnboarded}>
           <Stack.Screen name="onboarding" />
