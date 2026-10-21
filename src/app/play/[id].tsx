@@ -12,6 +12,7 @@ import { CardSpread, type SpreadSlot } from '@/components/card-spread';
 import { DeckArt } from '@/components/deck-art';
 import { EmptyState } from '@/components/empty-state';
 import { FlipCard } from '@/components/flip-card';
+import { HeartButton } from '@/components/heart-button';
 import { ShuffleStack } from '@/components/shuffle-stack';
 import { colors } from '@/constants/theme';
 import { depthFilterText, getCard } from '@/data/cards';
@@ -74,7 +75,7 @@ function Game({ deck, session }: { deck: Deck; session: DeckSession }) {
   const { pickCard, startSession } = useProgress();
   const { playShuffle, stopShuffle, playFlip } = useSounds();
   const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
   const [phase, setPhase] = useState<Phase>('bundle');
   const [slots, setSlots] = useState<SpreadSlot[]>([]);
@@ -87,7 +88,12 @@ function Game({ deck, session }: { deck: Deck; session: DeckSession }) {
   const picked = session.picked.length;
   const finished = session.remaining.length === 0;
   const selectedCard = selectedId ? getCard(selectedId) : undefined;
-  const openCardWidth = Math.min(width - 40, 340);
+  // Leave room under the open card for the two rows of buttons.
+  const openCardWidth = Math.min(
+    width - 40,
+    340,
+    (height - insets.top - insets.bottom - 200) * 0.7,
+  );
 
   const deal = () => {
     stopShuffle();
@@ -242,13 +248,24 @@ function Game({ deck, session }: { deck: Deck; session: DeckSession }) {
               onPress={flip}
             />
           </Animated.View>
-          <View className="mt-6" style={{ width: openCardWidth }}>
-            <Button
-              variant="secondary"
-              label={t('play.doneReading')}
-              icon="checkmark"
-              onPress={finishReading}
-            />
+          <View className="mt-6 gap-3" style={{ width: openCardWidth }}>
+            <View className="flex-row items-center gap-3">
+              <HeartButton questionId={selectedCard.id} size="large" tone="light" />
+              <View className="flex-1">
+                <Button
+                  variant="secondary"
+                  label={t('play.write')}
+                  icon="create-outline"
+                  onPress={() =>
+                    router.push({
+                      pathname: '/write/[questionId]',
+                      params: { questionId: selectedCard.id },
+                    })
+                  }
+                />
+              </View>
+            </View>
+            <Button label={t('play.doneReading')} icon="checkmark" onPress={finishReading} />
           </View>
         </Animated.View>
       )}

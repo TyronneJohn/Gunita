@@ -4,6 +4,7 @@ import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/app-text';
 import { DeckTile } from '@/components/deck-tile';
+import { HeartButton } from '@/components/heart-button';
 import { PaperCard } from '@/components/paper-card';
 import { Screen } from '@/components/screen';
 import { SectionHeader } from '@/components/section-header';
@@ -12,6 +13,7 @@ import { getDailyQuestion } from '@/data/daily-questions';
 import { decks, getDeck, type Deck } from '@/data/decks';
 import { useLanguage } from '@/i18n';
 import { formatLongDate, getGreetingKey } from '@/lib/date';
+import { useJournal } from '@/lib/journal';
 import { isSessionActive, useProgress } from '@/lib/progress';
 import { useDeckProgressLabel } from '@/lib/use-deck-progress';
 
@@ -26,6 +28,7 @@ export default function HomeScreen() {
   const dailyDeck = getDeck(daily.deckId);
   const featured = decks.slice(0, 4);
   const progressLabel = useDeckProgressLabel();
+  const { answeredToday } = useJournal();
 
   // Continue the last deck in progress, otherwise suggest the first deck.
   const { lastDeckId, getSession } = useProgress();
@@ -59,16 +62,48 @@ export default function HomeScreen() {
 
       {/* Daily question */}
       <PaperCard lifted className="mt-6 p-6">
-        <View className="flex-row items-center gap-2">
-          <Ionicons name="sparkles-outline" size={14} color={colors.sageDeep} />
-          <AppText variant="overline" tone="sage">
-            {t('home.dailyQuestion')}
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            router.push({ pathname: '/question/[questionId]', params: { questionId: daily.id } })
+          }
+          className="active:opacity-70">
+          <View className="flex-row items-center gap-2">
+            <Ionicons name="sparkles-outline" size={14} color={colors.sageDeep} />
+            <AppText variant="overline" tone="sage">
+              {t('home.dailyQuestion')}
+            </AppText>
+          </View>
+          <AppText variant="question" tone="ink" className="mt-4">
+            {pick(daily.question)}
           </AppText>
+        </Pressable>
+
+        <View className="mt-5 flex-row items-center gap-3">
+          <HeartButton questionId={daily.id} />
+          {answeredToday(daily.id) ? (
+            <View className="flex-row items-center gap-1.5 rounded-full bg-sage/25 px-4 py-2.5">
+              <Ionicons name="checkmark-circle" size={16} color={colors.sageDeep} />
+              <AppText variant="label" tone="sage">
+                {t('home.answeredToday')}
+              </AppText>
+            </View>
+          ) : (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() =>
+                router.push({ pathname: '/write/[questionId]', params: { questionId: daily.id } })
+              }
+              className="flex-row items-center gap-1.5 rounded-full border border-cocoa/25 px-4 py-2.5 active:opacity-70">
+              <Ionicons name="create-outline" size={16} color={colors.cocoa} />
+              <AppText variant="label" tone="cocoa">
+                {t('home.answer')}
+              </AppText>
+            </Pressable>
+          )}
         </View>
-        <AppText variant="question" tone="ink" className="mt-4">
-          {pick(daily.text)}
-        </AppText>
-        <View className="mt-6 flex-row items-center justify-between border-t border-beige pt-4">
+
+        <View className="mt-5 flex-row items-center justify-between border-t border-beige pt-4">
           {dailyDeck && (
             <View className="flex-row items-center gap-2">
               <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: dailyDeck.color }} />

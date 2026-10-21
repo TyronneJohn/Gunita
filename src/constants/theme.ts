@@ -18,6 +18,8 @@ export const colors = {
   mist: '#9DB3B1',
   ink: '#2E2621',
   muted: '#8A7A6D',
+  /** Filled heart for favorites. */
+  berry: '#B8615B',
 } as const;
 
 export const fonts = {

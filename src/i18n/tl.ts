@@ -97,6 +97,42 @@ export const tl: Record<TranslationKey, string> = {
   'play.shuffleAgain': 'Shuffle ulit',
   'play.otherDeck': 'Pumili ng ibang deck',
 
+  'play.write': 'Isulat',
+
+  'home.answer': 'Sagutin',
+  'home.answeredToday': 'Nasagot mo na ngayon',
+
+  'favorites.add': 'I-save sa favorites',
+  'favorites.remove': 'Alisin sa favorites',
+  'favorites.count': '{count} na naka-save',
+  'favorites.noAnswer': 'Hindi pa nasasagot',
+
+  'journal.draft': 'Draft',
+  'journal.answerCount': '{count} na sagot',
+
+  'write.save': 'I-save',
+  'write.edit': 'I-edit',
+  'write.newTitle': 'Ang sagot mo',
+  'write.editTitle': 'I-edit ang sagot',
+  'write.moodPrompt': 'Ano ang nararamdaman mo?',
+  'write.placeholder': 'Isulat mo lang ang naiisip mo…',
+  'write.autosaved': 'Nase-save ang isinusulat mo habang nagta-type ka.',
+  'write.delete': 'Burahin ang entry',
+  'write.deleteTitle': 'Burahin ang entry na ito?',
+  'write.deleteBody': 'Hindi na ito maibabalik.',
+  'write.deleteConfirm': 'Burahin',
+  'write.cancel': 'Cancel',
+
+  'question.yourAnswers': 'Mga sagot mo',
+  'question.noAnswers': 'Hindi mo pa ito nasasagot.',
+  'question.notFoundTitle': 'Hindi makita ang tanong',
+  'question.notFoundBody': 'Baka natanggal na ang tanong na ito.',
+
+  'mood.calm': 'Kalmado',
+  'mood.hopeful': 'May pag-asa',
+  'mood.heavy': 'Mabigat',
+  'mood.grateful': 'Nagpapasalamat',
+
   'card.tapToDraw': 'Tap para bumunot',
   'card.tapForReflection': 'Tap para sa reflection',
   'card.tapForQuestion': 'Tap para bumalik sa tanong',

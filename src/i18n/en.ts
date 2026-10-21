@@ -95,6 +95,42 @@ export const en = {
   'play.shuffleAgain': 'Shuffle again',
   'play.otherDeck': 'Choose another deck',
 
+  'play.write': 'Write',
+
+  'home.answer': 'Answer',
+  'home.answeredToday': 'Answered today',
+
+  'favorites.add': 'Save to favorites',
+  'favorites.remove': 'Remove from favorites',
+  'favorites.count': '{count} saved',
+  'favorites.noAnswer': 'Not answered yet',
+
+  'journal.draft': 'Draft',
+  'journal.answerCount': '{count} answers',
+
+  'write.save': 'Save',
+  'write.edit': 'Edit',
+  'write.newTitle': 'Your answer',
+  'write.editTitle': 'Edit answer',
+  'write.moodPrompt': 'How are you feeling?',
+  'write.placeholder': 'Write whatever comes to mind…',
+  'write.autosaved': 'Your words are saved as you type.',
+  'write.delete': 'Delete entry',
+  'write.deleteTitle': 'Delete this entry?',
+  'write.deleteBody': "This can't be undone.",
+  'write.deleteConfirm': 'Delete',
+  'write.cancel': 'Cancel',
+
+  'question.yourAnswers': 'Your answers',
+  'question.noAnswers': "You haven't answered this yet.",
+  'question.notFoundTitle': 'Question not found',
+  'question.notFoundBody': 'This question may have been removed.',
+
+  'mood.calm': 'Calm',
+  'mood.hopeful': 'Hopeful',
+  'mood.heavy': 'Heavy',
+  'mood.grateful': 'Grateful',
+
   'card.tapToDraw': 'Tap to draw',
   'card.tapForReflection': 'Tap for the reflection',
   'card.tapForQuestion': 'Tap to see the question again',

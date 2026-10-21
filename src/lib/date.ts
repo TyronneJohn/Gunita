@@ -45,6 +45,20 @@ export function getGreetingKey(date: Date): TranslationKey {
   return 'greeting.evening';
 }
 
+/** Short pieces for a calendar-style date block, e.g. { month: "OCT", day: "22", weekday: "Thu" }. */
+export function getDateParts(date: Date, language: Language) {
+  return {
+    month: MONTHS[language][date.getMonth()].slice(0, 3).toUpperCase(),
+    day: String(date.getDate()),
+    weekday: DAYS[language][date.getDay()].slice(0, 3),
+  };
+}
+
+/** e.g. "October 2026" or "Oktubre 2026" */
+export function formatMonthYear(date: Date, language: Language) {
+  return `${MONTHS[language][date.getMonth()]} ${date.getFullYear()}`;
+}
+
 /** e.g. "Thursday, October 22" or "Huwebes, Oktubre 22" */
 export function formatLongDate(date: Date, language: Language) {
   return `${DAYS[language][date.getDay()]}, ${MONTHS[language][date.getMonth()]} ${date.getDate()}`;
