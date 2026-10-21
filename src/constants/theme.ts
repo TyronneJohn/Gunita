@@ -1,65 +1,36 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Raw design tokens for places that can't use NativeWind classes
+ * (tab bar options, icon colors, shadows). Keep in sync with tailwind.config.js.
  */
 
-import '@/global.css';
-
-import { Platform } from 'react-native';
-
-export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
+export const colors = {
+  cream: '#F7F1E8',
+  paper: '#FFFBF5',
+  beige: '#E8DCC8',
+  sand: '#D9C9B0',
+  cocoa: '#5C4033',
+  cocoaSoft: '#8A6A58',
+  sage: '#9CAF88',
+  sageDeep: '#6F8560',
+  clay: '#C9967A',
+  rose: '#D4A5A0',
+  dusk: '#A698AE',
+  mist: '#9DB3B1',
+  ink: '#2E2621',
+  muted: '#8A7A6D',
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
-
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
-
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
+export const fonts = {
+  display: 'Fraunces_600SemiBold',
+  serif: 'Fraunces_400Regular',
+  serifLight: 'Fraunces_300Light',
+  sans: 'DMSans_400Regular',
+  sansMedium: 'DMSans_500Medium',
+  sansBold: 'DMSans_700Bold',
 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
+/** Soft, warm "paper on a table" shadows. */
+export const shadows = {
+  card: '0px 6px 18px rgba(92, 64, 51, 0.10)',
+  lifted: '0px 12px 28px rgba(92, 64, 51, 0.16)',
+} as const;
