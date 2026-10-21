@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/app-text';
 import { DeckTile } from '@/components/deck-tile';
@@ -10,39 +10,51 @@ import { SectionHeader } from '@/components/section-header';
 import { colors } from '@/constants/theme';
 import { getDailyQuestion } from '@/data/daily-questions';
 import { decks, getDeck, type Deck } from '@/data/decks';
-import { formatLongDate, getGreeting } from '@/lib/date';
+import { useLanguage } from '@/i18n';
+import { formatLongDate, getGreetingKey } from '@/lib/date';
+import { isSessionActive, useProgress } from '@/lib/progress';
+import { useDeckProgressLabel } from '@/lib/use-deck-progress';
 
 function openDeck(deck: Deck) {
   router.push({ pathname: '/deck/[id]', params: { id: deck.id } });
 }
 
 export default function HomeScreen() {
+  const { t, pick, language } = useLanguage();
   const today = new Date();
   const daily = getDailyQuestion(today);
   const dailyDeck = getDeck(daily.deckId);
   const featured = decks.slice(0, 4);
+  const progressLabel = useDeckProgressLabel();
+
+  // Continue the last deck in progress, otherwise suggest the first deck.
+  const { lastDeckId, getSession } = useProgress();
+  const lastDeck = lastDeckId ? getDeck(lastDeckId) : undefined;
+  const resumeSession = lastDeck ? getSession(lastDeck.id) : undefined;
+  const resumable = lastDeck && isSessionActive(resumeSession) ? lastDeck : undefined;
+  const highlight = resumable ?? decks[0];
 
   return (
     <Screen>
       <View className="flex-row items-start justify-between">
         <View className="flex-1 pr-4">
           <AppText variant="caption" tone="muted">
-            {formatLongDate(today)}
+            {formatLongDate(today, language)}
           </AppText>
           <AppText variant="title" tone="cocoa" className="mt-1">
-            {getGreeting(today)}
+            {t(getGreetingKey(today))}
           </AppText>
         </View>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Profile"
+          accessibilityLabel={t('home.profile')}
           onPress={() => router.navigate('/profile')}
           className="h-11 w-11 items-center justify-center rounded-full border border-sand bg-paper active:opacity-70">
           <Ionicons name="person-outline" size={20} color={colors.cocoa} />
         </Pressable>
       </View>
       <AppText variant="body" tone="muted" className="mt-1">
-        Kumusta ka today? Huminga muna tayo sandali.
+        {t('home.subtitle')}
       </AppText>
 
       {/* Daily question */}
@@ -50,11 +62,11 @@ export default function HomeScreen() {
         <View className="flex-row items-center gap-2">
           <Ionicons name="sparkles-outline" size={14} color={colors.sageDeep} />
           <AppText variant="overline" tone="sage">
-            Tanong ng araw
+            {t('home.dailyQuestion')}
           </AppText>
         </View>
         <AppText variant="question" tone="ink" className="mt-4">
-          {daily.text}
+          {pick(daily.text)}
         </AppText>
         <View className="mt-6 flex-row items-center justify-between border-t border-beige pt-4">
           {dailyDeck && (
@@ -66,7 +78,7 @@ export default function HomeScreen() {
             </View>
           )}
           <AppText variant="caption" tone="muted">
-            Bagong tanong bukas
+            {t('home.newTomorrow')}
           </AppText>
         </View>
       </PaperCard>
@@ -74,40 +86,47 @@ export default function HomeScreen() {
       {/* Start / continue */}
       <Pressable
         accessibilityRole="button"
-        onPress={() => openDeck(decks[0])}
+        onPress={() =>
+          resumable
+            ? router.push({ pathname: '/play/[id]', params: { id: resumable.id } })
+            : openDeck(highlight)
+        }
         className="mt-4 flex-row items-center rounded-3xl bg-cocoa p-4 active:opacity-90">
         <View
           className="h-12 w-12 items-center justify-center rounded-2xl"
-          style={{ backgroundColor: decks[0].color }}>
-          <Ionicons name={decks[0].icon} size={22} color={colors.paper} />
+          style={{ backgroundColor: highlight.color }}>
+          <Ionicons name={highlight.icon} size={22} color={colors.paper} />
         </View>
         <View className="ml-4 flex-1">
           <AppText variant="overline" tone="paper" className="opacity-70">
-            Simulan dito
+            {resumable
+              ? t('home.continue', { progress: progressLabel(resumable.id) ?? '' })
+              : t('home.startHere')}
           </AppText>
           <AppText variant="heading" tone="paper">
-            {decks[0].title} deck
+            {t('common.deckName', { deck: highlight.title })}
           </AppText>
         </View>
-        <Ionicons name="arrow-forward" size={20} color={colors.paper} />
+        <Ionicons name={resumable ? 'play' : 'arrow-forward'} size={20} color={colors.paper} />
       </Pressable>
 
       {/* Featured decks */}
       <SectionHeader
-        title="Featured decks"
-        actionLabel="See all"
+        title={t('home.featured')}
+        actionLabel={t('home.seeAll')}
         onAction={() => router.navigate('/explore')}
         className="mt-8"
       />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        className="-mx-5 mt-4"
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 12, gap: 14 }}>
+      <View className="mt-4 flex-row flex-wrap justify-between gap-y-4">
         {featured.map((deck) => (
-          <DeckTile key={deck.id} deck={deck} variant="featured" onPress={() => openDeck(deck)} />
+          <DeckTile
+            key={deck.id}
+            deck={deck}
+            progress={progressLabel(deck.id)}
+            onPress={() => openDeck(deck)}
+          />
         ))}
-      </ScrollView>
+      </View>
     </Screen>
   );
 }

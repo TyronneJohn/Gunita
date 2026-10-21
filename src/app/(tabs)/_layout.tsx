@@ -3,18 +3,21 @@ import { Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
 
 import { colors, fonts } from '@/constants/theme';
+import { useLanguage, type TranslationKey } from '@/i18n';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
-const TABS: { name: string; title: string; icon: IconName; activeIcon: IconName }[] = [
-  { name: 'index', title: 'Home', icon: 'home-outline', activeIcon: 'home' },
-  { name: 'explore', title: 'Explore', icon: 'compass-outline', activeIcon: 'compass' },
-  { name: 'favorites', title: 'Favorites', icon: 'heart-outline', activeIcon: 'heart' },
-  { name: 'journal', title: 'Journal', icon: 'book-outline', activeIcon: 'book' },
-  { name: 'profile', title: 'Profile', icon: 'person-outline', activeIcon: 'person' },
+const TABS: { name: string; title: TranslationKey; icon: IconName; activeIcon: IconName }[] = [
+  { name: 'index', title: 'tabs.home', icon: 'home-outline', activeIcon: 'home' },
+  { name: 'explore', title: 'tabs.explore', icon: 'compass-outline', activeIcon: 'compass' },
+  { name: 'favorites', title: 'tabs.favorites', icon: 'heart-outline', activeIcon: 'heart' },
+  { name: 'journal', title: 'tabs.journal', icon: 'book-outline', activeIcon: 'book' },
+  { name: 'profile', title: 'tabs.profile', icon: 'person-outline', activeIcon: 'person' },
 ];
 
 export default function TabLayout() {
+  const { t } = useLanguage();
+
   return (
     <Tabs
       screenOptions={{
@@ -34,7 +37,7 @@ export default function TabLayout() {
           key={tab.name}
           name={tab.name}
           options={{
-            title: tab.title,
+            title: t(tab.title),
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? tab.activeIcon : tab.icon} size={22} color={color} />
             ),

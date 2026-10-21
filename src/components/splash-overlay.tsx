@@ -12,12 +12,14 @@ import { scheduleOnRN } from 'react-native-worklets';
 
 import { DeckArt } from '@/components/deck-art';
 import { colors, fonts } from '@/constants/theme';
+import { useLanguage } from '@/i18n';
 
 /**
  * Takes over from the native splash screen: the Gunita mark gently
  * fades in, holds for a moment, then the whole overlay fades away.
  */
 export function SplashOverlay() {
+  const { t } = useLanguage();
   const [visible, setVisible] = useState(true);
   const overlayOpacity = useSharedValue(1);
   const contentOpacity = useSharedValue(0);
@@ -55,7 +57,7 @@ export function SplashOverlay() {
       <Animated.View style={[styles.content, contentStyle]}>
         <DeckArt glyph="G" backColors={[colors.sage, colors.clay]} scale={1.3} />
         <Text style={styles.title}>Gunita</Text>
-        <Text style={styles.tagline}>mga tanong para sa puso</Text>
+        <Text style={styles.tagline}>{t('splash.tagline')}</Text>
       </Animated.View>
     </Animated.View>
   );

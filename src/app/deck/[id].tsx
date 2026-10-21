@@ -1,25 +1,40 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/app-text';
 import { Button } from '@/components/button';
 import { DeckArt } from '@/components/deck-art';
 import { EmptyState } from '@/components/empty-state';
-import { PaperCard } from '@/components/paper-card';
 import { Screen } from '@/components/screen';
 import { colors } from '@/constants/theme';
+import { depthFilterText, getDeckCards, type DepthFilter } from '@/data/cards';
 import { getDeck } from '@/data/decks';
+import { useLanguage } from '@/i18n';
+import { useProgress } from '@/lib/progress';
+
+const DEPTH_FILTERS: DepthFilter[] = ['light', 'deeper', 'all'];
 
 export default function DeckScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { t, pick } = useLanguage();
   const deck = getDeck(id);
+  const { startSession } = useProgress();
+  // Nothing is selected until the player picks a depth.
+  const [depth, setDepth] = useState<DepthFilter | null>(null);
+
+  const startNew = () => {
+    if (!depth) return;
+    startSession(id, depth);
+    router.push({ pathname: '/play/[id]', params: { id } });
+  };
 
   return (
     <Screen padBottom>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Go back"
+        accessibilityLabel={t('common.back')}
         onPress={() => router.back()}
         className="h-11 w-11 items-center justify-center rounded-full border border-sand bg-paper active:opacity-70">
         <Ionicons name="chevron-back" size={22} color={colors.cocoa} />
@@ -29,8 +44,8 @@ export default function DeckScreen() {
         <EmptyState
           className="mt-6"
           icon="help-circle-outline"
-          title="Deck not found"
-          body="Hindi namin mahanap ang deck na ito."
+          title={t('common.deckNotFoundTitle')}
+          body={t('common.deckNotFoundBody')}
         />
       ) : (
         <>
@@ -44,20 +59,56 @@ export default function DeckScreen() {
             {deck.title}
           </AppText>
           <AppText variant="label" tone="sage" className="mt-1">
-            {deck.tagline}
+            {pick(deck.tagline)}
           </AppText>
           <AppText variant="body" tone="muted" className="mt-4">
-            {deck.description}
+            {pick(deck.description)}
           </AppText>
 
-          <PaperCard className="mt-6 flex-row items-center gap-3 p-5">
-            <Ionicons name="hourglass-outline" size={22} color={colors.cocoaSoft} />
-            <AppText variant="body" tone="ink" className="flex-1">
-              Inihahanda pa namin ang mga cards ng deck na ito. Coming soon!
-            </AppText>
-          </PaperCard>
+          {/* Depth filter */}
+          <AppText variant="heading" tone="cocoa" className="mt-8">
+            {t('deck.howDeep')}
+          </AppText>
+          <View className="mt-4 gap-3">
+            {DEPTH_FILTERS.map((option) => {
+              const selected = option === depth;
+              return (
+                <Pressable
+                  key={option}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected }}
+                  onPress={() => setDepth(selected ? null : option)}
+                  className={`flex-row items-center rounded-2xl border-2 px-4 py-4 active:opacity-80 ${selected ? 'border-cocoa bg-paper' : 'border-sand/70 bg-paper'}`}>
+                  <View
+                    className={`h-6 w-6 items-center justify-center rounded-full border-2 ${selected ? 'border-cocoa' : 'border-sand'}`}>
+                    {selected && <View className="h-3 w-3 rounded-full bg-cocoa" />}
+                  </View>
+                  <View className="ml-4 flex-1">
+                    <AppText variant="label" tone="cocoa">
+                      {t(depthFilterText[option].label)}
+                    </AppText>
+                    <AppText variant="caption" tone="muted" className="mt-0.5">
+                      {t(depthFilterText[option].description)}
+                    </AppText>
+                  </View>
+                  <View className="rounded-full bg-beige px-3 py-1">
+                    <AppText variant="caption" tone="cocoa">
+                      {t('deck.cardCount', { count: getDeckCards(deck.id, option).length })}
+                    </AppText>
+                  </View>
+                </Pressable>
+              );
+            })}
+          </View>
 
-          <Button className="mt-6" label="Draw a card" icon="albums-outline" disabled />
+          <View className="mt-8">
+            <Button
+              label={t('deck.next')}
+              icon="arrow-forward"
+              disabled={!depth}
+              onPress={startNew}
+            />
+          </View>
         </>
       )}
     </Screen>

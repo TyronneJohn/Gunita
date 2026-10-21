@@ -8,13 +8,14 @@ import { AppText } from '@/components/app-text';
 import { Button } from '@/components/button';
 import { DeckArt } from '@/components/deck-art';
 import { colors } from '@/constants/theme';
+import { useLanguage, type TranslationKey } from '@/i18n';
 import { useOnboarding } from '@/lib/onboarding';
 
 type Slide = {
   key: string;
-  eyebrow: string;
-  title: string;
-  body: string;
+  eyebrow: TranslationKey;
+  title: TranslationKey;
+  body: TranslationKey;
   icon: ComponentProps<typeof Ionicons>['name'];
   accent: string;
 };
@@ -22,31 +23,32 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     key: 'welcome',
-    eyebrow: 'Maligayang pagdating',
-    title: 'Kumusta ka, talaga?',
-    body: 'Ang Gunita ay isang tahimik na lugar para huminto sandali, magtanong, at makinig sa sarili mo.',
+    eyebrow: 'onboarding.welcomeEyebrow',
+    title: 'onboarding.welcomeTitle',
+    body: 'onboarding.welcomeBody',
     icon: 'leaf-outline',
     accent: colors.sage,
   },
   {
     key: 'how',
-    eyebrow: 'How it works',
-    title: 'Draw. Reflect. Share.',
-    body: 'Pick a deck, draw a card, and flip it to reveal a gentle reflection. Answer on your own, or share it with someone you trust.',
+    eyebrow: 'onboarding.howEyebrow',
+    title: 'onboarding.howTitle',
+    body: 'onboarding.howBody',
     icon: 'albums-outline',
     accent: colors.clay,
   },
   {
     key: 'start',
-    eyebrow: 'Tara na',
-    title: 'Walang maling sagot dito.',
-    body: "Basta totoo ka lang — that's more than enough. Tara, simulan na natin.",
+    eyebrow: 'onboarding.startEyebrow',
+    title: 'onboarding.startTitle',
+    body: 'onboarding.startBody',
     icon: 'heart-outline',
     accent: colors.rose,
   },
 ];
 
 export default function OnboardingScreen() {
+  const { t } = useLanguage();
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const { completeOnboarding } = useOnboarding();
@@ -70,7 +72,7 @@ export default function OnboardingScreen() {
         {!isLast && (
           <Pressable onPress={completeOnboarding} hitSlop={12} className="active:opacity-60">
             <AppText variant="label" tone="muted">
-              Skip
+              {t('onboarding.skip')}
             </AppText>
           </Pressable>
         )}
@@ -100,7 +102,7 @@ export default function OnboardingScreen() {
           ))}
         </View>
         <Button
-          label={isLast ? 'Simulan na' : 'Next'}
+          label={isLast ? t('onboarding.begin') : t('onboarding.next')}
           icon={isLast ? 'sparkles-outline' : 'arrow-forward'}
           onPress={goNext}
         />
@@ -110,6 +112,8 @@ export default function OnboardingScreen() {
 }
 
 function SlideView({ slide, width }: { slide: Slide; width: number }) {
+  const { t } = useLanguage();
+
   return (
     <View style={{ width }} className="flex-1 items-center justify-center px-8">
       <Animated.View entering={FadeInDown.duration(600)}>
@@ -124,13 +128,13 @@ function SlideView({ slide, width }: { slide: Slide; width: number }) {
         </View>
       </Animated.View>
       <AppText variant="overline" tone="sage" className="mb-2 text-center">
-        {slide.eyebrow}
+        {t(slide.eyebrow)}
       </AppText>
       <AppText variant="display" tone="cocoa" className="text-center">
-        {slide.title}
+        {t(slide.title)}
       </AppText>
       <AppText variant="body" tone="muted" className="mt-4 text-center">
-        {slide.body}
+        {t(slide.body)}
       </AppText>
     </View>
   );

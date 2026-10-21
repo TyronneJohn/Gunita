@@ -5,6 +5,8 @@ const variants = {
   title: 'font-display text-[28px] leading-9',
   heading: 'font-display text-lg leading-6',
   question: 'font-serif text-[22px] leading-8',
+  cardQuestion: 'font-serif text-[25px] leading-[36px]',
+  reflection: 'font-serif-light text-[21px] leading-[32px]',
   body: 'font-sans text-[15px] leading-6',
   label: 'font-sans-medium text-sm leading-5',
   caption: 'font-sans text-xs leading-[18px]',
