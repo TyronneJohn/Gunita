@@ -19,7 +19,6 @@
     "nativewind-env.d.ts"
   ],
   "exclude": [
-    "node_modules",
-    "_template-backup"
+    "node_modules"
   ]
 }
