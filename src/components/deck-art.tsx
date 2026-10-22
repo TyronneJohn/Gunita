@@ -2,7 +2,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import type { ComponentProps } from 'react';
 import { Text, View } from 'react-native';
 
-import { colors, fonts, shadows } from '@/constants/theme';
+import { fonts } from '@/constants/theme';
+import { useAppTheme } from '@/lib/theme';
 
 type DeckArtProps = {
   icon?: ComponentProps<typeof Ionicons>['name'];
@@ -20,6 +21,7 @@ export function DeckArt({
   backColors = ['rgba(255, 251, 245, 0.45)', 'rgba(255, 251, 245, 0.7)'],
   scale = 1,
 }: DeckArtProps) {
+  const { colors, shadows } = useAppTheme();
   const width = 52 * scale;
   const height = 72 * scale;
   const card = { width, height, borderRadius: 12 * scale };

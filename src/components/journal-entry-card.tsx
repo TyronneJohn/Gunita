@@ -2,7 +2,7 @@ import { Pressable, Text, View } from 'react-native';
 
 import { AppText } from '@/components/app-text';
 import { PaperCard } from '@/components/paper-card';
-import { colors } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { getMood } from '@/data/moods';
 import { getQuestion } from '@/data/questions';
 import { useLanguage } from '@/i18n';
@@ -20,6 +20,7 @@ export function JournalEntryCard({ entry, onPress, showQuestion = true }: Journa
   const { t, pick, language } = useLanguage();
   const question = getQuestion(entry.questionId);
   const mood = getMood(entry.mood);
+  const colors = useColors();
   const date = getDateParts(new Date(entry.createdAt), language);
 
   return (

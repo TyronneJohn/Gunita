@@ -16,7 +16,8 @@ import { AppText } from '@/components/app-text';
 import { EmptyState } from '@/components/empty-state';
 import { MoodPicker } from '@/components/mood-picker';
 import { PaperCard } from '@/components/paper-card';
-import { colors, fonts } from '@/constants/theme';
+import { accents, fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { depthLabels, type Card } from '@/data/cards';
 import type { Deck } from '@/data/decks';
 import { getMood, type Mood } from '@/data/moods';
@@ -33,6 +34,7 @@ export default function WriteScreen() {
     entryId?: string;
   }>();
   const { t, pick, language } = useLanguage();
+  const colors = useColors();
   const { getEntry, saveEntry, deleteEntry } = useJournal();
   const insets = useSafeAreaInsets();
   const question = getQuestion(questionId);
@@ -216,7 +218,7 @@ export default function WriteScreen() {
               {/* The answer, like a page in a notebook */}
               <PaperCard className="mt-3 px-6 pb-8 pt-4">
                 <Text style={[styles.quoteMark, { color: question.deck.color }]}>“</Text>
-                <Text style={styles.answerText}>{answer}</Text>
+                <Text style={[styles.answerText, { color: colors.ink }]}>{answer}</Text>
               </PaperCard>
 
               <Pressable
@@ -246,7 +248,7 @@ export default function WriteScreen() {
                   multiline
                   autoFocus={!existing}
                   textAlignVertical="top"
-                  style={[styles.answerText, { minHeight: 240 }]}
+                  style={[styles.answerText, { minHeight: 240, color: colors.ink }]}
                 />
               </PaperCard>
               <View className="mt-3 flex-row items-center gap-1.5">
@@ -289,18 +291,20 @@ function QuestionHeader({ card, deck }: { card: Card; deck: Deck }) {
       }}>
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
-          <View className="h-7 w-7 items-center justify-center rounded-full bg-paper">
-            <Ionicons name={deck.icon} size={14} color={colors.cocoa} />
+          <View
+            className="h-7 w-7 items-center justify-center rounded-full"
+            style={{ backgroundColor: '#FFFBF5' }}>
+            <Ionicons name={deck.icon} size={14} color={accents.onAccent} />
           </View>
-          <AppText variant="overline" tone="cocoa">
+          <AppText variant="overline" style={{ color: accents.onAccent }}>
             {deck.title}
           </AppText>
         </View>
-        <AppText variant="caption" tone="cocoa" className="opacity-70">
+        <AppText variant="caption" className="opacity-70" style={{ color: accents.onAccent }}>
           {depthLabels[card.depth]}
         </AppText>
       </View>
-      <AppText variant="question" tone="cocoa" className="mt-4">
+      <AppText variant="question" className="mt-4" style={{ color: accents.onAccent }}>
         {pick(card.question)}
       </AppText>
     </View>
@@ -325,6 +329,5 @@ const styles = {
     fontFamily: fonts.serif,
     fontSize: 18,
     lineHeight: 30,
-    color: colors.ink,
   },
 } as const;

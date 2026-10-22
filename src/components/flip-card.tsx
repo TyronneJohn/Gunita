@@ -10,10 +10,11 @@ import Animated, {
 
 import { AppText } from '@/components/app-text';
 import { DeckArt } from '@/components/deck-art';
-import { colors, fonts, shadows } from '@/constants/theme';
+import { accents, fonts, type ThemeColors } from '@/constants/theme';
 import { depthLabels, type Card, type Depth } from '@/data/cards';
 import type { Deck } from '@/data/decks';
 import { useLanguage } from '@/i18n';
+import { useAppTheme } from '@/lib/theme';
 
 type FlipCardProps = {
   card: Card;
@@ -27,11 +28,19 @@ type FlipCardProps = {
   onPress: () => void;
 };
 
-const depthStyles: Record<Depth, { background: string; text: string }> = {
-  light: { background: 'rgba(156, 175, 136, 0.25)', text: colors.sageDeep },
-  deeper: { background: 'rgba(201, 150, 122, 0.25)', text: colors.cocoaSoft },
-  deepest: { background: colors.cocoa, text: colors.paper },
-};
+/** Light pastel paper drawn over deck colors; text on it uses accents.onAccent. */
+const PAPER_WASH = '#FFFBF5';
+
+function depthStyle(depth: Depth, colors: ThemeColors) {
+  switch (depth) {
+    case 'light':
+      return { background: 'rgba(156, 175, 136, 0.25)', text: colors.sageDeep };
+    case 'deeper':
+      return { background: 'rgba(201, 150, 122, 0.25)', text: colors.cocoaSoft };
+    default:
+      return { background: colors.cocoa, text: colors.paper };
+  }
+}
 
 /**
  * A two-sided card. Side A shows the cover first, then the reflection;
@@ -40,6 +49,7 @@ const depthStyles: Record<Depth, { background: string; text: string }> = {
  */
 export function FlipCard({ card, deck, flips, width, onPress }: FlipCardProps) {
   const { t, pick } = useLanguage();
+  const { colors, shadows } = useAppTheme();
   const rotation = useSharedValue(0);
 
   useEffect(() => {
@@ -62,6 +72,12 @@ export function FlipCard({ card, deck, flips, width, onPress }: FlipCardProps) {
     };
   });
 
+  const faceTheme = {
+    backgroundColor: colors.paper,
+    borderColor: colors.sand,
+    boxShadow: shadows.lifted,
+  };
+
   const showReflection = flips >= 2;
   const isQuestionUp = flips % 2 === 1;
 
@@ -78,10 +94,10 @@ export function FlipCard({ card, deck, flips, width, onPress }: FlipCardProps) {
       accessibilityHint={t('card.flipHint')}
       onPress={onPress}
       style={{ width, aspectRatio: 0.7 }}>
-      <Animated.View style={[styles.face, sideAStyle]}>
+      <Animated.View style={[styles.face, faceTheme, sideAStyle]}>
         {showReflection ? <ReflectionFace card={card} deck={deck} /> : <CoverFace deck={deck} />}
       </Animated.View>
-      <Animated.View style={[styles.face, sideBStyle]}>
+      <Animated.View style={[styles.face, faceTheme, sideBStyle]}>
         <QuestionFace card={card} deck={deck} />
       </Animated.View>
     </Pressable>
@@ -113,15 +129,15 @@ function CoverFace({ deck }: { deck: Deck }) {
       <Frame color="rgba(255, 251, 245, 0.65)" />
       <View className="flex-1 items-center justify-center px-8">
         <DeckArt icon={deck.icon} scale={1.5} />
-        <AppText variant="title" tone="cocoa" className="mt-6 text-center">
+        <AppText variant="title" className="mt-6 text-center" style={styles.onAccent}>
           {deck.title}
         </AppText>
-        <View className="my-3 h-px w-12 bg-cocoa/30" />
-        <AppText variant="label" tone="cocoa" className="text-center opacity-75">
+        <View className="my-3 h-px w-12" style={{ backgroundColor: 'rgba(46, 38, 33, 0.3)' }} />
+        <AppText variant="label" className="text-center opacity-75" style={styles.onAccent}>
           {t('card.tapToDraw')}
         </AppText>
       </View>
-      <AppText variant="overline" tone="cocoa" className="mb-8 text-center opacity-60">
+      <AppText variant="overline" className="mb-8 text-center opacity-60" style={styles.onAccent}>
         Gunita
       </AppText>
     </View>
@@ -130,9 +146,18 @@ function CoverFace({ deck }: { deck: Deck }) {
 
 function QuestionFace({ card, deck }: { card: Card; deck: Deck }) {
   const { t, pick } = useLanguage();
-  const depth = depthStyles[card.depth];
+  const { colors } = useAppTheme();
+  const depth = depthStyle(card.depth, colors);
+
   return (
-    <View style={[styles.fill, styles.paperGrain]}>
+    <View
+      style={[
+        styles.fill,
+        {
+          backgroundColor: colors.paper,
+          experimental_backgroundImage: `linear-gradient(180deg, ${colors.paper} 0%, ${colors.cream} 100%)`,
+        },
+      ]}>
       <View style={{ height: 8, backgroundColor: deck.color }} />
       <View className="flex-1 px-7 pb-6 pt-5">
         <View className="flex-row items-center justify-between">
@@ -167,31 +192,32 @@ function QuestionFace({ card, deck }: { card: Card; deck: Deck }) {
 
 function ReflectionFace({ card, deck }: { card: Card; deck: Deck }) {
   const { t, pick } = useLanguage();
+  const { shadows } = useAppTheme();
 
   return (
     <View style={[styles.fill, { backgroundColor: deck.color }, styles.reflectionWash]}>
       <Frame color="rgba(92, 64, 51, 0.18)" />
       <View className="flex-1 items-center px-9 pb-8 pt-9">
         <View className="flex-row items-center gap-2">
-          <Ionicons name="sparkles" size={14} color={colors.cocoaSoft} />
-          <AppText variant="overline" tone="cocoa" className="opacity-80">
+          <Ionicons name="sparkles" size={14} color={accents.onAccent} />
+          <AppText variant="overline" className="opacity-80" style={styles.onAccent}>
             {t('card.reflection')}
           </AppText>
         </View>
 
         <View className="flex-1 items-center justify-center">
           <View
-            className="mb-6 h-14 w-14 items-center justify-center rounded-full bg-paper"
-            style={{ boxShadow: shadows.card }}>
-            <Ionicons name={deck.icon} size={24} color={colors.cocoa} />
+            className="mb-6 h-14 w-14 items-center justify-center rounded-full"
+            style={{ backgroundColor: PAPER_WASH, boxShadow: shadows.card }}>
+            <Ionicons name={deck.icon} size={24} color={accents.onAccent} />
           </View>
-          <AppText variant="reflection" tone="cocoa" className="text-center">
+          <AppText variant="reflection" className="text-center" style={styles.onAccent}>
             {pick(card.reflection)}
           </AppText>
           <Text style={styles.signature}>— Gunita</Text>
         </View>
 
-        <AppText variant="caption" tone="cocoa" className="opacity-60">
+        <AppText variant="caption" className="opacity-60" style={styles.onAccent}>
           {t('card.tapForQuestion')}
         </AppText>
       </View>
@@ -206,20 +232,16 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backfaceVisibility: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(217, 201, 176, 0.6)',
-    backgroundColor: colors.paper,
-    boxShadow: shadows.lifted,
   },
   fill: {
     flex: 1,
   },
+  onAccent: {
+    color: accents.onAccent,
+  },
   coverShine: {
     experimental_backgroundImage:
       'linear-gradient(160deg, rgba(255, 251, 245, 0.45) 0%, rgba(255, 251, 245, 0) 55%, rgba(92, 64, 51, 0.12) 100%)',
-  },
-  paperGrain: {
-    backgroundColor: colors.paper,
-    experimental_backgroundImage: `linear-gradient(180deg, ${colors.paper} 0%, ${colors.cream} 100%)`,
   },
   reflectionWash: {
     experimental_backgroundImage:
@@ -254,6 +276,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontFamily: fonts.serif,
     fontSize: 14,
-    color: colors.cocoaSoft,
+    color: 'rgba(46, 38, 33, 0.7)',
   },
 });

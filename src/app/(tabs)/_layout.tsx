@@ -2,7 +2,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 import type { ComponentProps } from 'react';
 
-import { colors, fonts } from '@/constants/theme';
+import { fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { useLanguage, type TranslationKey } from '@/i18n';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
@@ -17,6 +18,7 @@ const TABS: { name: string; title: TranslationKey; icon: IconName; activeIcon: I
 
 export default function TabLayout() {
   const { t } = useLanguage();
+  const colors = useColors();
 
   return (
     <Tabs

@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Haptics from 'expo-haptics';
 import { Pressable } from 'react-native';
 
-import { colors } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { useLanguage } from '@/i18n';
 import { useFavorites } from '@/lib/favorites';
 
@@ -18,6 +18,7 @@ export function HeartButton({ questionId, size = 'small', tone = 'dark' }: Heart
   const { t } = useLanguage();
   const { isFavorite, toggleFavorite } = useFavorites();
   const saved = isFavorite(questionId);
+  const colors = useColors();
 
   return (
     <Pressable
@@ -35,7 +36,7 @@ export function HeartButton({ questionId, size = 'small', tone = 'dark' }: Heart
       <Ionicons
         name={saved ? 'heart' : 'heart-outline'}
         size={size === 'large' ? 30 : 24}
-        color={saved ? colors.berry : tone === 'light' ? colors.paper : colors.cocoa}
+        color={saved ? colors.berry : tone === 'light' ? '#FFFBF5' : colors.cocoa}
       />
     </Pressable>
   );

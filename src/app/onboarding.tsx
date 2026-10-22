@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '@/components/app-text';
 import { Button } from '@/components/button';
 import { DeckArt } from '@/components/deck-art';
-import { colors } from '@/constants/theme';
+import { accents } from '@/constants/theme';
 import { useLanguage, type TranslationKey } from '@/i18n';
 import { useOnboarding } from '@/lib/onboarding';
 
@@ -27,7 +27,7 @@ const SLIDES: Slide[] = [
     title: 'onboarding.welcomeTitle',
     body: 'onboarding.welcomeBody',
     icon: 'leaf-outline',
-    accent: colors.sage,
+    accent: accents.sage,
   },
   {
     key: 'how',
@@ -35,7 +35,7 @@ const SLIDES: Slide[] = [
     title: 'onboarding.howTitle',
     body: 'onboarding.howBody',
     icon: 'albums-outline',
-    accent: colors.clay,
+    accent: accents.clay,
   },
   {
     key: 'start',
@@ -43,7 +43,7 @@ const SLIDES: Slide[] = [
     title: 'onboarding.startTitle',
     body: 'onboarding.startBody',
     icon: 'heart-outline',
-    accent: colors.rose,
+    accent: accents.rose,
   },
 ];
 
@@ -67,7 +67,9 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <View className="flex-1 bg-cream" style={{ paddingTop: insets.top, paddingBottom: insets.bottom + 20 }}>
+    <View
+      className="flex-1 bg-cream"
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom + 20 }}>
       <View className="h-12 flex-row items-center justify-end px-5">
         {!isLast && (
           <Pressable onPress={completeOnboarding} hitSlop={12} className="active:opacity-60">

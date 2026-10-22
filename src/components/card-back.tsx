@@ -1,11 +1,13 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { View } from 'react-native';
 
-import { colors, shadows } from '@/constants/theme';
+import { accents } from '@/constants/theme';
+import { useAppTheme } from '@/lib/theme';
 import type { Deck } from '@/data/decks';
 
 /** The face-down side of a card, used in the bundle and on the table. */
 export function CardBack({ deck, width }: { deck: Deck; width: number }) {
+  const { shadows } = useAppTheme();
   const height = width * 1.4;
   const radius = Math.max(10, width * 0.12);
   const inset = Math.max(5, width * 0.06);
@@ -38,7 +40,7 @@ export function CardBack({ deck, width }: { deck: Deck; width: number }) {
       <View
         className="items-center justify-center rounded-full"
         style={{ width: badge, height: badge, backgroundColor: 'rgba(255, 251, 245, 0.85)' }}>
-        <Ionicons name={deck.icon} size={badge * 0.5} color={colors.cocoa} />
+        <Ionicons name={deck.icon} size={badge * 0.5} color={accents.onAccent} />
       </View>
     </View>
   );

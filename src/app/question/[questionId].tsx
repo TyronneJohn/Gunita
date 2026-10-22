@@ -11,7 +11,7 @@ import { FlipCard } from '@/components/flip-card';
 import { HeartButton } from '@/components/heart-button';
 import { JournalEntryCard } from '@/components/journal-entry-card';
 import { Screen } from '@/components/screen';
-import { colors } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { getQuestion } from '@/data/questions';
 import { useLanguage } from '@/i18n';
 import { useJournal } from '@/lib/journal';
@@ -21,6 +21,7 @@ import { useSounds } from '@/lib/sounds';
 export default function QuestionScreen() {
   const { questionId } = useLocalSearchParams<{ questionId: string }>();
   const { t } = useLanguage();
+  const colors = useColors();
   const { getEntriesForQuestion } = useJournal();
   const { playFlip } = useSounds();
   const { width } = useWindowDimensions();

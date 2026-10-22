@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useState, type ReactNode } from 'react';
 
-import { colors } from '@/constants/theme';
+import { accents } from '@/constants/theme';
 import { getDeckCards, type DepthFilter } from '@/data/cards';
 import { shuffle } from '@/lib/shuffle';
 
@@ -17,16 +17,16 @@ export const MAX_PLAYERS = 10;
 
 /** Each player gets their own color, in this order. */
 export const playerColors = [
-  colors.sage,
-  colors.clay,
-  colors.rose,
-  colors.dusk,
-  colors.mist,
-  colors.sand,
-  colors.cocoaSoft,
-  colors.berry,
-  colors.olive,
-  colors.peach,
+  accents.sage,
+  accents.clay,
+  accents.rose,
+  accents.dusk,
+  accents.mist,
+  accents.wheat,
+  '#B89A86',
+  '#C98A84',
+  accents.olive,
+  accents.peach,
 ];
 
 export type Player = { id: string; name: string; color: string };

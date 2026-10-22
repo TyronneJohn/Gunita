@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 import { AppText } from '@/components/app-text';
 import { PaperCard } from '@/components/paper-card';
-import { colors } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 
 type EmptyStateProps = {
   icon: ComponentProps<typeof Ionicons>['name'];
@@ -15,6 +15,7 @@ type EmptyStateProps = {
 };
 
 export function EmptyState({ icon, title, body, children, className = '' }: EmptyStateProps) {
+  const colors = useColors();
   return (
     <PaperCard className={`items-center px-6 py-10 ${className}`}>
       <View className="mb-4 h-16 w-16 items-center justify-center rounded-full bg-beige">

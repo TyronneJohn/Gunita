@@ -212,6 +212,35 @@ export const tl: Record<TranslationKey, string> = {
   'group.playAgain': 'Maglaro ulit',
   'group.notFound': 'Tapos na ang group game na ito. Magsimula ng bago mula sa isang deck.',
 
+  'appearance.system': 'System',
+  'appearance.light': 'Light',
+  'appearance.dark': 'Dark',
+  'appearance.systemHint': 'Susunod sa setting ng phone mo',
+  'theme.toDark': 'Lumipat sa dark mode',
+  'theme.toLight': 'Lumipat sa light mode',
+
+  'privacy.eyebrow': 'Privacy',
+  'privacy.title': 'Ang data mo, ikaw ang bahala',
+  'privacy.onPhoneTitle': 'Naka-save sa phone na ito',
+  'privacy.onPhoneBody':
+    'Unang nase-save sa phone na ito ang journal, favorites, progress, at settings mo. Hindi kailanman sine-save ang group games.',
+  'privacy.cloudTitle': 'Naka-back up sa account mo',
+  'privacy.cloudBody':
+    'Kapag naka-sign in ka, naba-back up ang journal, favorites, at progress mo para makuha mo ulit sa ibang phone. Ikaw lang ang makakabasa nito.',
+  'privacy.neverTitle': 'Pribado',
+  'privacy.neverBody':
+    'Hindi kailanman ibinabahagi o ibinebenta ang journal mo, at walang ibang makakabasa nito.',
+  'privacy.clearTitle': 'Burahin ang data sa phone na ito',
+  'privacy.clearBody':
+    'Buburahin ang journal, favorites, at progress mo sa phone na ito. Mananatili ang settings.',
+  'privacy.clearSignedInNote':
+    'Masa-sign out ka rin. Mananatili ang backup sa account mo at babalik ito kapag nag-sign in ka ulit.',
+  'privacy.clearButton': 'Burahin ang data',
+  'privacy.clearConfirmTitle': 'Burahin ang data sa phone na ito?',
+  'privacy.clearConfirmBody': 'Hindi na maibabalik ang anumang hindi naka-back up.',
+  'privacy.cleared': 'Nabura na ang data mo sa phone na ito.',
+  'privacy.policySoon': 'Parating na ang buong privacy policy.',
+
   'mood.calm': 'Kalmado',
   'mood.hopeful': 'May pag-asa',
   'mood.heavy': 'Mabigat',

@@ -3,7 +3,7 @@ import * as Haptics from 'expo-haptics';
 import type { ComponentProps } from 'react';
 import { Pressable, Text } from 'react-native';
 
-import { colors } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -22,12 +22,6 @@ const containerStyles: Record<ButtonVariant, string> = {
   ghost: 'bg-transparent',
 };
 
-const labelColors: Record<ButtonVariant, string> = {
-  primary: colors.paper,
-  secondary: colors.cocoa,
-  ghost: colors.cocoa,
-};
-
 export function Button({
   label,
   onPress,
@@ -36,6 +30,13 @@ export function Button({
   disabled = false,
   className = '',
 }: ButtonProps) {
+  const colors = useColors();
+  const labelColors: Record<ButtonVariant, string> = {
+    primary: colors.paper,
+    secondary: colors.cocoa,
+    ghost: colors.cocoa,
+  };
+
   const handlePress = () => {
     Haptics.selectionAsync().catch(() => {});
     onPress?.();

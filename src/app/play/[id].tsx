@@ -15,7 +15,8 @@ import { FlipCard } from '@/components/flip-card';
 import { HeartButton } from '@/components/heart-button';
 import { PaperCard } from '@/components/paper-card';
 import { ShuffleStack } from '@/components/shuffle-stack';
-import { colors, fonts } from '@/constants/theme';
+import { accents, fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { depthFilterText, getCard } from '@/data/cards';
 import { getDeck, type Deck } from '@/data/decks';
 import { useLanguage } from '@/i18n';
@@ -414,7 +415,7 @@ function Handoff({
         <View
           className="mt-6 h-28 w-28 items-center justify-center rounded-full"
           style={{ backgroundColor: turn.color }}>
-          <Text style={{ fontFamily: fonts.display, fontSize: 48, color: colors.cocoa }}>
+          <Text style={{ fontFamily: fonts.display, fontSize: 48, color: accents.onAccent }}>
             {turn.name[0]?.toUpperCase() ?? '?'}
           </Text>
         </View>
@@ -510,7 +511,7 @@ function GroupComplete({
             <View
               className="h-8 w-8 items-center justify-center rounded-full"
               style={{ backgroundColor: player.color }}>
-              <Text style={{ fontFamily: fonts.display, fontSize: 15, color: colors.cocoa }}>
+              <Text style={{ fontFamily: fonts.display, fontSize: 15, color: accents.onAccent }}>
                 {player.name[0]?.toUpperCase() ?? '?'}
               </Text>
             </View>
@@ -549,6 +550,7 @@ function IconButton({
   onPress: () => void;
   disabled?: boolean;
 }) {
+  const colors = useColors();
   return (
     <Pressable
       accessibilityRole="button"

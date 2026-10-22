@@ -9,7 +9,12 @@ type SectionHeaderProps = {
   className?: string;
 };
 
-export function SectionHeader({ title, actionLabel, onAction, className = '' }: SectionHeaderProps) {
+export function SectionHeader({
+  title,
+  actionLabel,
+  onAction,
+  className = '',
+}: SectionHeaderProps) {
   return (
     <View className={`flex-row items-end justify-between ${className}`}>
       <AppText variant="heading" tone="cocoa">

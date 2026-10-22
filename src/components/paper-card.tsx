@@ -1,6 +1,6 @@
 import { View, type ViewProps } from 'react-native';
 
-import { shadows } from '@/constants/theme';
+import { useAppTheme } from '@/lib/theme';
 
 type PaperCardProps = ViewProps & {
   /** Use a deeper shadow so the card feels lifted off the page. */
@@ -10,6 +10,7 @@ type PaperCardProps = ViewProps & {
 
 /** Rounded, paper-like surface with a soft warm shadow. */
 export function PaperCard({ lifted = false, className = '', style, ...rest }: PaperCardProps) {
+  const { shadows } = useAppTheme();
   return (
     <View
       className={`rounded-3xl border border-sand/60 bg-paper ${className}`}

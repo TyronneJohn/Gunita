@@ -1,7 +1,7 @@
 import type Ionicons from '@expo/vector-icons/Ionicons';
 import type { ComponentProps } from 'react';
 
-import { colors } from '@/constants/theme';
+import { accents } from '@/constants/theme';
 import type { Localized } from '@/i18n/types';
 
 export type Deck = {
@@ -28,7 +28,7 @@ export const decks: Deck[] = [
       tl: 'Mga tanong para kilalanin ulit ang sarili mo — your dreams, your fears, and the small things that make you, you.',
     },
     icon: 'leaf-outline',
-    color: colors.sage,
+    color: accents.sage,
   },
   {
     id: 'barkada',
@@ -42,7 +42,7 @@ export const decks: Deck[] = [
       tl: 'Light to deep questions for late-night kwentuhan with friends. Perfect for road trips, sleepovers, at inuman sessions.',
     },
     icon: 'people-outline',
-    color: colors.clay,
+    color: accents.clay,
   },
   {
     id: 'pamilya',
@@ -56,7 +56,7 @@ export const decks: Deck[] = [
       tl: 'Get to know your family beyond the usual "Kumain ka na?" — stories, lessons, and memories worth passing on.',
     },
     icon: 'home-outline',
-    color: colors.sand,
+    color: accents.wheat,
   },
   {
     id: 'pag-ibig',
@@ -70,7 +70,7 @@ export const decks: Deck[] = [
       tl: 'Questions for couples — from kilig beginnings to the quiet, steady kind of love. Para mas lalo kayong magkakilala.',
     },
     icon: 'heart-outline',
-    color: colors.rose,
+    color: accents.rose,
   },
   {
     id: 'alaala',
@@ -84,7 +84,7 @@ export const decks: Deck[] = [
       tl: 'Revisit the moments that shaped you — childhood, first times, at mga taong hindi mo makakalimutan.',
     },
     icon: 'time-outline',
-    color: colors.dusk,
+    color: accents.dusk,
   },
   {
     id: 'moving-on',
@@ -98,7 +98,7 @@ export const decks: Deck[] = [
       tl: 'Gentle questions for when you are learning to let go, forgive, or start again. Dahan-dahan lang, walang pressure.',
     },
     icon: 'sunny-outline',
-    color: colors.mist,
+    color: accents.mist,
   },
 ];
 

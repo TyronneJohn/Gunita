@@ -30,6 +30,17 @@ type AppTextProps = TextProps & {
   className?: string;
 };
 
+/** Titles are announced as headings by screen readers. */
+const headingVariants: AppTextVariant[] = ['display', 'title'];
+
 export function AppText({ variant = 'body', tone = 'ink', className = '', ...rest }: AppTextProps) {
-  return <Text className={`${variants[variant]} ${tones[tone]} ${className}`} {...rest} />;
+  return (
+    <Text
+      accessibilityRole={headingVariants.includes(variant) ? 'header' : undefined}
+      // Follows the phone's font size, but caps it so layouts don't break at the largest sizes.
+      maxFontSizeMultiplier={1.35}
+      className={`${variants[variant]} ${tones[tone]} ${className}`}
+      {...rest}
+    />
+  );
 }

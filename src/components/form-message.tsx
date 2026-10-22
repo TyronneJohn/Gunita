@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/app-text';
-import { colors } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 
 type FormMessageProps = {
   message: string;
@@ -12,6 +12,7 @@ type FormMessageProps = {
 /** A soft banner for form-level errors or notes (e.g. "We sent you a code"). */
 export function FormMessage({ message, tone = 'error' }: FormMessageProps) {
   const isError = tone === 'error';
+  const colors = useColors();
 
   return (
     <View

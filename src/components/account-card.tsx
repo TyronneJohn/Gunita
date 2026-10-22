@@ -6,7 +6,8 @@ import { Alert, Pressable, Text, View } from 'react-native';
 import { AppText } from '@/components/app-text';
 import { Button } from '@/components/button';
 import { PaperCard } from '@/components/paper-card';
-import { colors, fonts } from '@/constants/theme';
+import { fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { useLanguage, type TranslationKey } from '@/i18n';
 import { useAuth } from '@/lib/auth';
 import { useSync, type SyncStatus } from '@/lib/sync';
@@ -30,6 +31,7 @@ export function AccountCard() {
   const { t } = useLanguage();
   const { enabled, user, signOut } = useAuth();
   const { status } = useSync();
+  const colors = useColors();
   const syncLabel = syncLabels[status];
   const syncColor = status === 'error' ? colors.berry : colors.sageDeep;
 
@@ -102,6 +104,7 @@ export function DeleteAccountButton() {
   const { t } = useLanguage();
   const { user, deleteAccount } = useAuth();
   const { forgetOwner } = useSync();
+  const colors = useColors();
   const [busy, setBusy] = useState(false);
 
   if (!user) return null;

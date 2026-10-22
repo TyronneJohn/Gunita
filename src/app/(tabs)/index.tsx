@@ -8,7 +8,7 @@ import { HeartButton } from '@/components/heart-button';
 import { PaperCard } from '@/components/paper-card';
 import { Screen } from '@/components/screen';
 import { SectionHeader } from '@/components/section-header';
-import { colors } from '@/constants/theme';
+import { useAppTheme } from '@/lib/theme';
 import { getDailyQuestion } from '@/data/daily-questions';
 import { decks, getDeck, type Deck } from '@/data/decks';
 import { useLanguage } from '@/i18n';
@@ -23,6 +23,7 @@ function openDeck(deck: Deck) {
 
 export default function HomeScreen() {
   const { t, pick, language } = useLanguage();
+  const { colors, scheme, toggle: toggleTheme } = useAppTheme();
   const today = new Date();
   const daily = getDailyQuestion(today);
   const dailyDeck = getDeck(daily.deckId);
@@ -48,13 +49,27 @@ export default function HomeScreen() {
             {t(getGreetingKey(today))}
           </AppText>
         </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t('home.profile')}
-          onPress={() => router.navigate('/profile')}
-          className="h-11 w-11 items-center justify-center rounded-full border border-sand bg-paper active:opacity-70">
-          <Ionicons name="person-outline" size={20} color={colors.cocoa} />
-        </Pressable>
+        <View className="flex-row gap-2">
+          {/* Quick light/dark switch */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={scheme === 'dark' ? t('theme.toLight') : t('theme.toDark')}
+            onPress={toggleTheme}
+            className="h-11 w-11 items-center justify-center rounded-full border border-sand bg-paper active:opacity-70">
+            <Ionicons
+              name={scheme === 'dark' ? 'sunny-outline' : 'moon-outline'}
+              size={20}
+              color={colors.cocoa}
+            />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('home.profile')}
+            onPress={() => router.navigate('/profile')}
+            className="h-11 w-11 items-center justify-center rounded-full border border-sand bg-paper active:opacity-70">
+            <Ionicons name="person-outline" size={20} color={colors.cocoa} />
+          </Pressable>
+        </View>
       </View>
       <AppText variant="body" tone="muted" className="mt-1">
         {t('home.subtitle')}
@@ -106,7 +121,10 @@ export default function HomeScreen() {
         <View className="mt-5 flex-row items-center justify-between border-t border-beige pt-4">
           {dailyDeck && (
             <View className="flex-row items-center gap-2">
-              <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: dailyDeck.color }} />
+              <View
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: dailyDeck.color }}
+              />
               <AppText variant="caption" tone="muted">
                 {dailyDeck.title}
               </AppText>

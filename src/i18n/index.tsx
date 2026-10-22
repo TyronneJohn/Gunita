@@ -32,7 +32,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
-      .then((value) => setLanguageState(value === 'en' || value === 'tl' ? value : DEFAULT_LANGUAGE))
+      .then((value) =>
+        setLanguageState(value === 'en' || value === 'tl' ? value : DEFAULT_LANGUAGE),
+      )
       .catch(() => setLanguageState(DEFAULT_LANGUAGE));
   }, []);
 

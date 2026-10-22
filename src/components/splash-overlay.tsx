@@ -11,8 +11,9 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { DeckArt } from '@/components/deck-art';
-import { colors, fonts } from '@/constants/theme';
+import { accents, fonts } from '@/constants/theme';
 import { useLanguage } from '@/i18n';
+import { useColors } from '@/lib/theme';
 
 /**
  * Takes over from the native splash screen: the Gunita mark gently
@@ -20,6 +21,7 @@ import { useLanguage } from '@/i18n';
  */
 export function SplashOverlay() {
   const { t } = useLanguage();
+  const colors = useColors();
   const [visible, setVisible] = useState(true);
   const overlayOpacity = useSharedValue(1);
   const contentOpacity = useSharedValue(0);
@@ -53,11 +55,13 @@ export function SplashOverlay() {
   if (!visible) return null;
 
   return (
-    <Animated.View onLayout={start} style={[styles.overlay, overlayStyle]}>
+    <Animated.View
+      onLayout={start}
+      style={[styles.overlay, { backgroundColor: colors.cream }, overlayStyle]}>
       <Animated.View style={[styles.content, contentStyle]}>
-        <DeckArt glyph="G" backColors={[colors.sage, colors.clay]} scale={1.3} />
-        <Text style={styles.title}>Gunita</Text>
-        <Text style={styles.tagline}>{t('splash.tagline')}</Text>
+        <DeckArt glyph="G" backColors={[accents.sage, accents.clay]} scale={1.3} />
+        <Text style={[styles.title, { color: colors.cocoa }]}>Gunita</Text>
+        <Text style={[styles.tagline, { color: colors.muted }]}>{t('splash.tagline')}</Text>
       </Animated.View>
     </Animated.View>
   );
@@ -66,7 +70,6 @@ export function SplashOverlay() {
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: colors.cream,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1000,
@@ -78,13 +81,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontFamily: fonts.display,
     fontSize: 44,
-    color: colors.cocoa,
   },
   tagline: {
     marginTop: 4,
     fontFamily: fonts.sans,
     fontSize: 15,
     letterSpacing: 0.5,
-    color: colors.muted,
   },
 });

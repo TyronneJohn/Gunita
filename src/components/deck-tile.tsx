@@ -2,7 +2,7 @@ import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/app-text';
 import { DeckArt } from '@/components/deck-art';
-import { shadows } from '@/constants/theme';
+import { useAppTheme } from '@/lib/theme';
 import type { Deck } from '@/data/decks';
 import { useLanguage } from '@/i18n';
 
@@ -17,6 +17,7 @@ type DeckTileProps = {
 
 export function DeckTile({ deck, variant = 'grid', onPress, progress }: DeckTileProps) {
   const { t, pick } = useLanguage();
+  const { shadows } = useAppTheme();
 
   return (
     <Pressable

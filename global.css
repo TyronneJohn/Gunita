@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Light-mode defaults for the themed colors. The app overrides these at runtime
+   (see src/lib/theme.tsx) to switch between light and dark. */
+:root {
+  --color-cream: 247 241 232;
+  --color-paper: 255 251 245;
+  --color-beige: 232 220 200;
+  --color-sand: 217 201 176;
+  --color-cocoa: 92 64 51;
+  --color-cocoa-soft: 138 106 88;
+  --color-ink: 46 38 33;
+  --color-muted: 138 122 109;
+  --color-sage-deep: 111 133 96;
+  --color-berry: 184 97 91;
+}

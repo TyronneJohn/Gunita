@@ -3,7 +3,8 @@ import { forwardRef, useState } from 'react';
 import { Pressable, TextInput, View, type TextInputProps } from 'react-native';
 
 import { AppText } from '@/components/app-text';
-import { colors, fonts } from '@/constants/theme';
+import { fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { useLanguage } from '@/i18n';
 
 type TextFieldProps = Omit<TextInputProps, 'style'> & {
@@ -21,6 +22,7 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
   ref,
 ) {
   const { t } = useLanguage();
+  const colors = useColors();
   const [focused, setFocused] = useState(false);
   const [visible, setVisible] = useState(false);
 

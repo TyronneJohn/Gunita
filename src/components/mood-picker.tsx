@@ -1,7 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { moods, type Mood } from '@/data/moods';
-import { colors, fonts } from '@/constants/theme';
+import { fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { useLanguage } from '@/i18n';
 
 type MoodPickerProps = {
@@ -13,6 +14,7 @@ type MoodPickerProps = {
 /** Four moods side by side in one row, each an equal-width tile. */
 export function MoodPicker({ value, onChange }: MoodPickerProps) {
   const { t } = useLanguage();
+  const colors = useColors();
 
   return (
     <View className="flex-row gap-2">

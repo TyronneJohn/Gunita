@@ -1,4 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { router } from 'expo-router';
 import { useState, type ComponentProps, type ReactNode } from 'react';
 import { Pressable, Switch, View } from 'react-native';
 
@@ -8,27 +9,34 @@ import { Button } from '@/components/button';
 import { PageHeader } from '@/components/page-header';
 import { PaperCard } from '@/components/paper-card';
 import { Screen } from '@/components/screen';
-import { colors } from '@/constants/theme';
 import { languageNames, useLanguage, type Language, type TranslationKey } from '@/i18n';
 import { useAuth } from '@/lib/auth';
 import { useOnboarding } from '@/lib/onboarding';
 import { useSounds } from '@/lib/sounds';
+import { useAppTheme, type AppearancePreference } from '@/lib/theme';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
-const COMING_SOON: { icon: IconName; label: TranslationKey }[] = [
-  { icon: 'color-palette-outline', label: 'profile.appearance' },
-  { icon: 'lock-closed-outline', label: 'profile.privacy' },
-];
-
 const LANGUAGES: Language[] = ['en', 'tl'];
+
+const APPEARANCES: { id: AppearancePreference; label: TranslationKey; icon: IconName }[] = [
+  { id: 'system', label: 'appearance.system', icon: 'phone-portrait-outline' },
+  { id: 'light', label: 'appearance.light', icon: 'sunny-outline' },
+  { id: 'dark', label: 'appearance.dark', icon: 'moon-outline' },
+];
 
 export default function ProfileScreen() {
   const { t, language, setLanguage } = useLanguage();
   const { resetOnboarding } = useOnboarding();
   const { enabled: soundEnabled, setEnabled: setSoundEnabled } = useSounds();
-  const [languageOpen, setLanguageOpen] = useState(false);
   const { enabled: authEnabled, user } = useAuth();
+  const { colors, preference, setPreference } = useAppTheme();
+  const [open, setOpen] = useState<'language' | 'appearance' | null>(null);
+
+  const toggleOpen = (section: 'language' | 'appearance') =>
+    setOpen((current) => (current === section ? null : section));
+
+  const appearanceLabel = APPEARANCES.find((option) => option.id === preference)?.label;
 
   return (
     <Screen>
@@ -53,44 +61,42 @@ export default function ProfileScreen() {
         )}
 
         {/* Language */}
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ expanded: languageOpen }}
-          onPress={() => setLanguageOpen((open) => !open)}
-          className="active:opacity-70">
-          <SettingRow icon="language-outline" label={t('profile.language')} divider={!authEnabled}>
-            <AppText variant="label" tone="muted" className="mr-2">
-              {languageNames[language]}
-            </AppText>
-            <Ionicons
-              name={languageOpen ? 'chevron-up' : 'chevron-down'}
-              size={18}
-              color={colors.muted}
-            />
-          </SettingRow>
-        </Pressable>
-        {languageOpen && (
-          <View className="mb-3 gap-2">
-            {LANGUAGES.map((option) => {
-              const selected = option === language;
-              return (
-                <Pressable
-                  key={option}
-                  accessibilityRole="radio"
-                  accessibilityState={{ selected }}
-                  onPress={() => setLanguage(option)}
-                  className={`flex-row items-center rounded-2xl border-2 px-4 py-3 active:opacity-80 ${selected ? 'border-cocoa' : 'border-sand/70'}`}>
-                  <View
-                    className={`h-5 w-5 items-center justify-center rounded-full border-2 ${selected ? 'border-cocoa' : 'border-sand'}`}>
-                    {selected && <View className="h-2.5 w-2.5 rounded-full bg-cocoa" />}
-                  </View>
-                  <AppText variant="label" tone="cocoa" className="ml-3">
-                    {languageNames[option]}
-                  </AppText>
-                </Pressable>
-              );
-            })}
-          </View>
+        <ExpandableRow
+          icon="language-outline"
+          label={t('profile.language')}
+          value={languageNames[language]}
+          expanded={open === 'language'}
+          divider={!authEnabled}
+          onPress={() => toggleOpen('language')}
+        />
+        {open === 'language' && (
+          <ChoiceList
+            options={LANGUAGES.map((option) => ({ id: option, label: languageNames[option] }))}
+            selected={language}
+            onSelect={setLanguage}
+          />
+        )}
+
+        {/* Appearance */}
+        <ExpandableRow
+          icon="color-palette-outline"
+          label={t('profile.appearance')}
+          value={appearanceLabel ? t(appearanceLabel) : ''}
+          expanded={open === 'appearance'}
+          divider
+          onPress={() => toggleOpen('appearance')}
+        />
+        {open === 'appearance' && (
+          <ChoiceList
+            options={APPEARANCES.map((option) => ({
+              id: option.id,
+              label: t(option.label),
+              icon: option.icon,
+              hint: option.id === 'system' ? t('appearance.systemHint') : undefined,
+            }))}
+            selected={preference}
+            onSelect={setPreference}
+          />
         )}
 
         <SettingRow icon="volume-medium-outline" label={t('profile.sound')} divider>
@@ -103,11 +109,15 @@ export default function ProfileScreen() {
           />
         </SettingRow>
 
-        {COMING_SOON.map((item) => (
-          <SettingRow key={item.label} icon={item.icon} label={t(item.label)} divider>
-            <SoonBadge label={t('profile.soon')} />
+        {/* Privacy */}
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('/privacy')}
+          className="active:opacity-70">
+          <SettingRow icon="lock-closed-outline" label={t('profile.privacy')} divider>
+            <Ionicons name="chevron-forward" size={18} color={colors.muted} />
           </SettingRow>
-        ))}
+        </Pressable>
       </PaperCard>
 
       <View className="mt-6">
@@ -139,6 +149,8 @@ function SettingRow({
   divider?: boolean;
   children: ReactNode;
 }) {
+  const { colors } = useAppTheme();
+
   return (
     <View className={`flex-row items-center py-4 ${divider ? 'border-t border-beige' : ''}`}>
       <Ionicons name={icon} size={22} color={colors.cocoa} />
@@ -146,6 +158,91 @@ function SettingRow({
         {label}
       </AppText>
       {children}
+    </View>
+  );
+}
+
+/** A setting row that opens a list of choices underneath it. */
+function ExpandableRow({
+  icon,
+  label,
+  value,
+  expanded,
+  divider,
+  onPress,
+}: {
+  icon: IconName;
+  label: string;
+  value: string;
+  expanded: boolean;
+  divider: boolean;
+  onPress: () => void;
+}) {
+  const { colors } = useAppTheme();
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ expanded }}
+      onPress={onPress}
+      className="active:opacity-70">
+      <SettingRow icon={icon} label={label} divider={divider}>
+        <AppText variant="label" tone="muted" className="mr-2">
+          {value}
+        </AppText>
+        <Ionicons name={expanded ? 'chevron-up' : 'chevron-down'} size={18} color={colors.muted} />
+      </SettingRow>
+    </Pressable>
+  );
+}
+
+function ChoiceList<T extends string>({
+  options,
+  selected,
+  onSelect,
+}: {
+  options: { id: T; label: string; icon?: IconName; hint?: string }[];
+  selected: T;
+  onSelect: (id: T) => void;
+}) {
+  const { colors } = useAppTheme();
+
+  return (
+    <View className="mb-3 gap-2">
+      {options.map((option) => {
+        const isSelected = option.id === selected;
+        return (
+          <Pressable
+            key={option.id}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: isSelected }}
+            onPress={() => onSelect(option.id)}
+            className={`flex-row items-center rounded-2xl border-2 px-4 py-3 active:opacity-80 ${isSelected ? 'border-cocoa' : 'border-sand/70'}`}>
+            <View
+              className={`h-5 w-5 items-center justify-center rounded-full border-2 ${isSelected ? 'border-cocoa' : 'border-sand'}`}>
+              {isSelected && <View className="h-2.5 w-2.5 rounded-full bg-cocoa" />}
+            </View>
+            {option.icon && (
+              <Ionicons
+                name={option.icon}
+                size={18}
+                color={colors.cocoa}
+                style={{ marginLeft: 12 }}
+              />
+            )}
+            <View className="ml-3 flex-1">
+              <AppText variant="label" tone="cocoa">
+                {option.label}
+              </AppText>
+              {option.hint && (
+                <AppText variant="caption" tone="muted">
+                  {option.hint}
+                </AppText>
+              )}
+            </View>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }

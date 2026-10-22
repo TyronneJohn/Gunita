@@ -4,7 +4,8 @@ import { Pressable, View } from 'react-native';
 import { AppText } from '@/components/app-text';
 import { HeartButton } from '@/components/heart-button';
 import { PaperCard } from '@/components/paper-card';
-import { colors } from '@/constants/theme';
+import { accents } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { depthLabels } from '@/data/cards';
 import { getQuestion } from '@/data/questions';
 import { useLanguage } from '@/i18n';
@@ -19,6 +20,7 @@ type FavoriteRowProps = {
 export function FavoriteRow({ questionId, onPress }: FavoriteRowProps) {
   const { t, pick } = useLanguage();
   const { getEntriesForQuestion } = useJournal();
+  const colors = useColors();
   const question = getQuestion(questionId);
   if (!question) return null;
 
@@ -33,7 +35,7 @@ export function FavoriteRow({ questionId, onPress }: FavoriteRowProps) {
           <View
             className="h-10 w-10 items-center justify-center rounded-xl"
             style={{ backgroundColor: deck.color }}>
-            <Ionicons name={deck.icon} size={18} color={colors.cocoa} />
+            <Ionicons name={deck.icon} size={18} color={accents.onAccent} />
           </View>
           <AppText variant="caption" tone="muted" className="mt-1.5">
             {depthLabels[card.depth]}

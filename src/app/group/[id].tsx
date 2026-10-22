@@ -16,7 +16,8 @@ import { AppText } from '@/components/app-text';
 import { Button } from '@/components/button';
 import { EmptyState } from '@/components/empty-state';
 import { PaperCard } from '@/components/paper-card';
-import { colors, fonts } from '@/constants/theme';
+import { accents, fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { depthFilterText, getDeckCards, type DepthFilter } from '@/data/cards';
 import { getDeck } from '@/data/decks';
 import { useLanguage } from '@/i18n';
@@ -29,6 +30,7 @@ const DEPTHS: DepthFilter[] = ['light', 'deeper', 'all'];
 export default function GroupSetupScreen() {
   const { id, depth: depthParam } = useLocalSearchParams<{ id: string; depth?: string }>();
   const { t } = useLanguage();
+  const colors = useColors();
   const { startGroup } = useGroup();
   const insets = useSafeAreaInsets();
   const deck = getDeck(id);
@@ -102,7 +104,7 @@ export default function GroupSetupScreen() {
               <View
                 className="h-7 w-7 items-center justify-center rounded-full"
                 style={{ backgroundColor: deck.color }}>
-                <Ionicons name={deck.icon} size={14} color={colors.cocoa} />
+                <Ionicons name={deck.icon} size={14} color={accents.onAccent} />
               </View>
               <AppText variant="overline" tone="cocoa">
                 {deck.title}
@@ -132,7 +134,11 @@ export default function GroupSetupScreen() {
                       className="h-10 w-10 items-center justify-center rounded-full"
                       style={{ backgroundColor: color }}>
                       <Text
-                        style={{ fontFamily: fonts.display, fontSize: 16, color: colors.cocoa }}>
+                        style={{
+                          fontFamily: fonts.display,
+                          fontSize: 16,
+                          color: accents.onAccent,
+                        }}>
                         {name.trim()[0]?.toUpperCase() ?? index + 1}
                       </Text>
                     </View>

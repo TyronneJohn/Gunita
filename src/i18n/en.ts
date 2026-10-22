@@ -210,6 +210,34 @@ export const en = {
   'group.playAgain': 'Play again',
   'group.notFound': 'This group game has ended. Start a new one from a deck.',
 
+  'appearance.system': 'System',
+  'appearance.light': 'Light',
+  'appearance.dark': 'Dark',
+  'appearance.systemHint': "Matches your phone's setting",
+  'theme.toDark': 'Switch to dark mode',
+  'theme.toLight': 'Switch to light mode',
+
+  'privacy.eyebrow': 'Privacy',
+  'privacy.title': 'Your data, your choice',
+  'privacy.onPhoneTitle': 'Saved on this phone',
+  'privacy.onPhoneBody':
+    'Your journal, favorites, progress, and settings are saved on this phone first. Group games are never saved.',
+  'privacy.cloudTitle': 'Backed up to your account',
+  'privacy.cloudBody':
+    'When you sign in, your journal, favorites, and progress are backed up so you can get them back on another phone. Only you can read them.',
+  'privacy.neverTitle': 'Kept private',
+  'privacy.neverBody': 'Your journal is never shared or sold, and no one else can read it.',
+  'privacy.clearTitle': 'Clear data on this phone',
+  'privacy.clearBody':
+    'Removes your journal, favorites, and progress from this phone. Settings stay.',
+  'privacy.clearSignedInNote':
+    "You'll also be signed out. Your backup stays in your account and comes back when you sign in again.",
+  'privacy.clearButton': 'Clear data',
+  'privacy.clearConfirmTitle': 'Clear data on this phone?',
+  'privacy.clearConfirmBody': "Anything that isn't backed up can't be recovered.",
+  'privacy.cleared': 'Your data on this phone was cleared.',
+  'privacy.policySoon': 'The full privacy policy is coming soon.',
+
   'mood.calm': 'Calm',
   'mood.hopeful': 'Hopeful',
   'mood.heavy': 'Heavy',

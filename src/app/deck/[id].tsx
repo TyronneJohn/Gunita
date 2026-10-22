@@ -8,7 +8,7 @@ import { Button } from '@/components/button';
 import { DeckArt } from '@/components/deck-art';
 import { EmptyState } from '@/components/empty-state';
 import { Screen } from '@/components/screen';
-import { colors } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { depthFilterText, getDeckCards, type DepthFilter } from '@/data/cards';
 import { getDeck } from '@/data/decks';
 import { useLanguage } from '@/i18n';
@@ -19,6 +19,7 @@ const DEPTH_FILTERS: DepthFilter[] = ['light', 'deeper', 'all'];
 export default function DeckScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t, pick } = useLanguage();
+  const colors = useColors();
   const deck = getDeck(id);
   const { startSession } = useProgress();
   // Nothing is selected until the player picks a depth.

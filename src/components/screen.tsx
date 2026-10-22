@@ -12,7 +12,12 @@ type ScreenProps = {
 };
 
 /** Cream page wrapper with safe-area spacing and side gutters. */
-export function Screen({ children, scroll = true, padBottom = false, className = '' }: ScreenProps) {
+export function Screen({
+  children,
+  scroll = true,
+  padBottom = false,
+  className = '',
+}: ScreenProps) {
   const insets = useSafeAreaInsets();
   const paddingTop = insets.top + 12;
   const paddingBottom = (padBottom ? insets.bottom : 0) + 28;

@@ -6,7 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/app-text';
 import { DeckArt } from '@/components/deck-art';
-import { colors, fonts } from '@/constants/theme';
+import { accents, fonts } from '@/constants/theme';
+import { useColors } from '@/lib/theme';
 import { useLanguage } from '@/i18n';
 
 type AuthLayoutProps = {
@@ -21,6 +22,7 @@ type AuthLayoutProps = {
 export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProps) {
   const { t } = useLanguage();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
 
   return (
     <KeyboardAvoidingView behavior="padding" className="flex-1 bg-cream">
@@ -43,7 +45,7 @@ export function AuthLayout({ title, subtitle, children, footer }: AuthLayoutProp
         </Pressable>
 
         <View className="mt-8 items-center">
-          <DeckArt glyph="G" backColors={[colors.sage, colors.clay]} scale={0.8} />
+          <DeckArt glyph="G" backColors={[accents.sage, accents.clay]} scale={0.8} />
         </View>
 
         <AppText variant="title" tone="cocoa" className="mt-6 text-center">
